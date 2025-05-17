@@ -11,6 +11,8 @@ Public License was not distributed with this file, see <https://www.gnu.org/lice
 
 import json
 import sys
+import asyncio
+import inspect
 
 
 class AdapterIPCService:
@@ -40,7 +42,12 @@ class AdapterIPCService:
                 raise AttributeError(f"Unknown method: {method_name}")
 
             method = getattr(self.adapter, method_name)
-            result = method(**params)
+
+            if inspect.iscoroutinefunction(method):
+                result = asyncio.run(method(**params))
+            else:
+                result = method(**params)
+
             return json.dumps(
                 {"error": None, "result": result},
                 ensure_ascii=False,
