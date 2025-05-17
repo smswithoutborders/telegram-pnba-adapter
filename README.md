@@ -74,6 +74,18 @@ To see all available commands:
 python telegram_cli.py --help
 ```
 
+To use the interactive mode which provides a menu interface:
+
+```bash
+python telegram_cli.py --interactive
+```
+
+or
+
+```bash
+python telegram_cli.py -i
+```
+
 ### Authentication Commands
 
 **Send Authentication Code:**
@@ -110,19 +122,18 @@ python telegram_cli.py message:send --phone="+1234567890" --recipient="@username
 python telegram_cli.py session:invalidate --phone="+1234567890"
 ```
 
-### Interactive Mode
+> [!TIP]
+>
+> If you don't provide required options, the CLI will prompt you for them:
+>
+> ```bash
+> python telegram_cli.py message:send
+> ```
 
-If you don't provide required options, the CLI will prompt you for them:
-
-```bash
-python telegram_cli.py message:send
-# The CLI will prompt for phone, recipient, and message text
-```
-
-### Command Help
-
-To get help for a specific command:
-
-```bash
-python telegram_cli.py auth:send-code --help
-```
+> [!TIP]
+>
+> To get help for a specific command:
+>
+> ```bash
+> python telegram_cli.py auth:send-code --help
+> ```
