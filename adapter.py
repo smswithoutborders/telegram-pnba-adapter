@@ -117,8 +117,9 @@ class TelegramPNBAAdapter(PNBAProtocolInterface):
         return client, registry, session_path
 
     async def send_authorization_code(
-        self, phone_number: str, base_path: Optional[str] = None
+        self, phone_number: str, **kwargs
     ) -> Dict[str, Any]:
+        base_path = kwargs.get("base_path", None)
         client, registry, _ = self._get_client_and_registry(
             phone_number, base_path, overwrite=True
         )
@@ -139,8 +140,9 @@ class TelegramPNBAAdapter(PNBAProtocolInterface):
             await client.disconnect()
 
     async def validate_code_and_fetch_user_info(
-        self, phone_number: str, code: str, base_path: Optional[str] = None
+        self, phone_number: str, code: str, **kwargs
     ) -> Dict[str, Any]:
+        base_path = kwargs.get("base_path", None)
         client, registry, _ = self._get_client_and_registry(phone_number, base_path)
         phone_code_hash = registry.read().get("phone_code_hash")
 
@@ -176,8 +178,9 @@ class TelegramPNBAAdapter(PNBAProtocolInterface):
             await client.disconnect()
 
     async def validate_password_and_fetch_user_info(
-        self, phone_number: str, password: str, base_path: Optional[str] = None
+        self, phone_number: str, password: str, **kwargs
     ) -> Dict[str, Any]:
+        base_path = kwargs.get("base_path", None)
         client, registry, _ = self._get_client_and_registry(phone_number, base_path)
 
         try:
@@ -196,9 +199,8 @@ class TelegramPNBAAdapter(PNBAProtocolInterface):
         finally:
             await client.disconnect()
 
-    async def invalidate_session(
-        self, phone_number: str, base_path: Optional[str] = None
-    ) -> bool:
+    async def invalidate_session(self, phone_number: str, **kwargs) -> bool:
+        base_path = kwargs.get("base_path", None)
         client, _, session_path = self._get_client_and_registry(phone_number, base_path)
 
         try:
@@ -212,12 +214,9 @@ class TelegramPNBAAdapter(PNBAProtocolInterface):
             await client.disconnect()
 
     async def send_message(
-        self,
-        phone_number: str,
-        recipient: str,
-        message: str,
-        base_path: Optional[str] = None,
+        self, phone_number: str, recipient: str, message: str, **kwargs
     ) -> bool:
+        base_path = kwargs.get("base_path", None)
         client, _, _ = self._get_client_and_registry(phone_number, base_path)
 
         try:
