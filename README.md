@@ -36,11 +36,7 @@ sudo apt install build-essential python3-dev
 3. **Install the required Python packages:**
 
    ```bash
-   # For production use
    pip install -r requirements.txt
-
-   # For development and testing (includes CLI tools)
-   pip install -r test-requirements.txt
    ```
 
 ## Configuration
@@ -62,78 +58,27 @@ sudo apt install build-essential python3-dev
 }
 ```
 
-## CLI Usage
-
-The adapter comes with a command-line interface (CLI) that allows you to test all functionality directly from the terminal.
-
-### Getting Started
-
-To see all available commands:
+## Testing
 
 ```bash
-python telegram_cli.py --help
+python -m tests.client
 ```
 
-To use the interactive mode which provides a menu interface:
+Available commands:
+
+```
+send_code <phone_number>
+verify <phone_number> <code>
+validate_password <phone_number> <password>
+send_message <phone_number> <recipient> <message> [file_path]
+invalidate <phone_number>
+quit
+```
+
+## Keeping Interfaces Up to Date
+
+If you suspect that `protocol_interfaces.py` is outdated or inconsistent with the host platform, sync it using:
 
 ```bash
-python telegram_cli.py --interactive
+curl -fsSL -o protocol_interfaces.py https://raw.githubusercontent.com/smswithoutborders/RelaySMS-Publisher/main/platforms/protocol_interfaces.py
 ```
-
-or
-
-```bash
-python telegram_cli.py -i
-```
-
-### Authentication Commands
-
-**Send Authentication Code:**
-
-```bash
-python telegram_cli.py auth:send-code --phone="+1234567890"
-```
-
-**Validate Authentication Code:**
-
-```bash
-python telegram_cli.py auth:validate-code --phone="+1234567890" --code="12345"
-```
-
-**Validate Two-Step Verification Password:**
-
-```bash
-python telegram_cli.py auth:validate-password --phone="+1234567890" --password="your_password"
-```
-
-### Messaging Commands
-
-**Send a Message:**
-
-```bash
-python telegram_cli.py message:send --phone="+1234567890" --recipient="@username" --text="Hello from CLI"
-```
-
-### Session Management
-
-**Invalidate a Session:**
-
-```bash
-python telegram_cli.py session:invalidate --phone="+1234567890"
-```
-
-> [!TIP]
->
-> If you don't provide required options, the CLI will prompt you for them:
->
-> ```bash
-> python telegram_cli.py message:send
-> ```
-
-> [!TIP]
->
-> To get help for a specific command:
->
-> ```bash
-> python telegram_cli.py auth:send-code --help
-> ```
