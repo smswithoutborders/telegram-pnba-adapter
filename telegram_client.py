@@ -64,6 +64,7 @@ async def client_session(
         yield client, snapshot
     finally:
         try:
-            snapshot.session_string = client.session.save()
+            if client.session is not None:
+                snapshot.session_string = client.session.save()
         finally:
             await client.disconnect()
