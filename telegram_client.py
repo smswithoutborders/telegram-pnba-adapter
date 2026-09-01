@@ -3,14 +3,13 @@
 import io
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from pathlib import Path
 from typing import AsyncIterator, List, Optional, Tuple
 
 from telethon import TelegramClient
 from telethon import utils as telethon_utils
+from telethon.sessions import StringSession
 
 from config import Credentials
-from session_registry import SessionRegistry
 
 
 @dataclass
@@ -20,6 +19,11 @@ class Attachment:
     data: bytes
     filename: str
     mimetype: Optional[str] = None
+
+
+@dataclass
+class SessionSnapshot:
+    session_string: Optional[str] = None
 
 
 def to_telegram_file(attachment: Attachment) -> io.BytesIO:
@@ -39,10 +43,9 @@ def should_force_document(attachments: List[Attachment]) -> bool:
     return not all(telethon_utils.is_image(a.filename) for a in attachments)
 
 
-def build_client(credentials: Credentials, session_file: Path) -> TelegramClient:
-    """Construct a `TelegramClient` bound to a specific account's session file."""
+def build_client(credentials: Credentials, session: StringSession) -> TelegramClient:
     return TelegramClient(
-        session=session_file,
+        session=session,
         api_id=credentials.API_ID,
         api_hash=credentials.API_HASH,
     )
@@ -50,19 +53,17 @@ def build_client(credentials: Credentials, session_file: Path) -> TelegramClient
 
 @asynccontextmanager
 async def client_session(
-    credentials: Credentials,
-    phone_number: str,
-    base_path: Optional[str] = None,
-    overwrite: bool = False,
-) -> AsyncIterator[Tuple[TelegramClient, SessionRegistry]]:
-    """Yield a connected client, disconnecting automatically on exit."""
-    registry = SessionRegistry(
-        phone_number, credentials, base_path, overwrite=overwrite
-    )
-    client = build_client(credentials, registry.get_session_file_path())
+    credentials: Credentials, session_string: Optional[str] = None
+) -> AsyncIterator[Tuple[TelegramClient, SessionSnapshot]]:
+    session = StringSession(session_string) if session_string else StringSession()
+    client = build_client(credentials, session)
+    snapshot = SessionSnapshot()
 
     await client.connect()
     try:
-        yield client, registry
+        yield client, snapshot
     finally:
-        await client.disconnect()
+        try:
+            snapshot.session_string = client.session.save()
+        finally:
+            await client.disconnect()

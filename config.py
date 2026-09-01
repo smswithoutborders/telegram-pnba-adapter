@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 _PACKAGE_DIR = Path(__file__).parent
 
 DEFAULT_SESSIONS_DIRNAME = "sessions"
-DEFAULT_REGISTRY_FILENAME = "registry.json"
+DEFAULT_REGISTRY_FILENAME = "pending_auth.sqlite3"
 
 
 @dataclass
