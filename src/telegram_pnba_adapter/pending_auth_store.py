@@ -4,10 +4,11 @@ import hashlib
 import hmac
 import sqlite3
 import time
-from pathlib import Path
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
-from config import Credentials
+from relaysms_adapter_sdk import state_dir
+
+FILENAME = "pending_auth.sqlite3"
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS pending_auth (
@@ -28,11 +29,9 @@ class PendingAuth(NamedTuple):
 
 
 class PendingAuthStore:
-    def __init__(self, credentials: Credentials, base_path: Optional[str] = None):
-        self._hmac_key = credentials.API_HASH.encode("utf-8")
-
-        db_path = credentials.sessions_dir(base_path) / credentials.REGISTRY_FILENAME
-        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self, hmac_key: str):
+        self._hmac_key = hmac_key.encode("utf-8")
+        db_path = state_dir() / FILENAME
         self._conn = sqlite3.connect(db_path, timeout=_BUSY_TIMEOUT_MS / 1000)
         self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.execute(f"PRAGMA busy_timeout={_BUSY_TIMEOUT_MS}")
@@ -61,7 +60,7 @@ class PendingAuthStore:
         )
         self._conn.commit()
 
-    def get(self, phone_number: str) -> Optional[PendingAuth]:
+    def get(self, phone_number: str) -> PendingAuth | None:
         row = self._conn.execute(
             "SELECT phone_code_hash, session_string FROM pending_auth "
             "WHERE phone_number_hash = ?",
