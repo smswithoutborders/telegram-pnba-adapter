@@ -1,0 +1,11 @@
+entry = "telegram_pnba_adapter:TelegramAdapter"
+name = "telegram"
+display_name = "Telegram"
+protocol = "pnba"
+category = "message"
+offline_first = false
+auth_provider = "self"
+
+[icons]
+svg = "https://raw.githubusercontent.com/smswithoutborders/telegram-pnba-adapter/main/icons/telegram.svg"
+png = "https://raw.githubusercontent.com/smswithoutborders/telegram-pnba-adapter/main/icons/telegram.png"
