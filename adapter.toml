@@ -9,3 +9,13 @@ auth_provider = "self"
 [icons]
 svg = "https://raw.githubusercontent.com/smswithoutborders/telegram-pnba-adapter/main/icons/telegram.svg"
 png = "https://raw.githubusercontent.com/smswithoutborders/telegram-pnba-adapter/main/icons/telegram.png"
+
+[config.api_id]
+type = "integer"
+required = true
+description = "The app's api_id from my.telegram.org."
+
+[config.api_hash]
+required = true
+secret = true
+description = "The app's api_hash from my.telegram.org."

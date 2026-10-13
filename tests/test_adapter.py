@@ -1,8 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import asyncio
+import dataclasses
 import json
 from contextlib import asynccontextmanager
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -21,12 +23,14 @@ from relaysms_adapter_sdk import (
     RevokeRequest,
     SendRequest,
     TokenInvalidError,
+    manifest,
 )
 from relaysms_adapter_sdk.paths import CONFIG_DIR_ENV, STATE_DIR_ENV
 from telethon import errors
 
 from telegram_pnba_adapter import TelegramAdapter
 from telegram_pnba_adapter import adapter as adapter_module
+from telegram_pnba_adapter.credentials import Credentials
 from telegram_pnba_adapter.telegram_client import SessionSnapshot
 
 PHONE = "+237600000000"
@@ -144,3 +148,9 @@ class TestRevoke:
     def test_already_invalid(self, adapter, client):
         client.log_out.side_effect = errors.AuthKeyUnregisteredError(None)
         run(adapter.revoke(RevokeRequest(Account(PHONE, token=TOKEN))))
+
+
+def test_adapter_toml_declares_every_setting():
+    declared = manifest.load(Path(__file__).parents[1]).config
+    expected = {field.name for field in dataclasses.fields(Credentials)}
+    assert {field.name for field in declared} == expected

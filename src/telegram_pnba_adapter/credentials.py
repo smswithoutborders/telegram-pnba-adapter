@@ -1,12 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """The Telegram API application from my.telegram.org."""
 
-import json
 from dataclasses import dataclass
 
-from relaysms_adapter_sdk import config_dir
-
-FILENAME = "credentials.json"
+from relaysms_adapter_sdk import read_config
 
 
 @dataclass(frozen=True)
@@ -21,12 +18,11 @@ def load() -> Credentials:
     Raises:
         ValueError: The file is invalid.
     """
-    path = config_dir() / FILENAME
+    raw = read_config()
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
         api_id = int(raw["api_id"])
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as e:
-        raise ValueError(f"{path} needs a numeric api_id: {e}") from e
+    except (KeyError, TypeError, ValueError) as e:
+        raise ValueError(f"credentials.json needs a numeric api_id: {e}") from e
     if not isinstance(raw.get("api_hash"), str) or not raw["api_hash"].strip():
-        raise ValueError(f"api_hash in {path} must be a non-empty string.")
+        raise ValueError("api_hash in credentials.json must be a non-empty string.")
     return Credentials(api_id=api_id, api_hash=raw["api_hash"])
