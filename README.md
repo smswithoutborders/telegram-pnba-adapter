@@ -2,16 +2,9 @@
 
 Lets [RelaySMS Publisher](https://github.com/smswithoutborders/RelaySMS-Publisher) users send Telegram messages from their account, linked with their phone number. Built with the [RelaySMS Adapter SDK](https://github.com/smswithoutborders/RelaySMS-Publisher/tree/main/sdk).
 
-## Credentials
+## Settings
 
-Create an application at [my.telegram.org](https://my.telegram.org/) and put its `credentials.json` in the adapter's config directory. The Publisher keeps it at `data/platforms/config/<adapter id>/credentials.json`.
-
-```json
-{
-  "api_id": "12345",
-  "api_hash": "0123456789abcdef0123456789abcdef"
-}
-```
+Create an application at [my.telegram.org](https://my.telegram.org/) for its `api_id` and `api_hash`, described in [adapter.toml](adapter.toml). On a Publisher, an administrator sets them with its [settings commands](https://github.com/smswithoutborders/RelaySMS-Publisher/blob/main/docs/platforms.md#settings) or REST API.
 
 Logins waiting for a code or password are kept in `pending_auth.sqlite3` in the adapter's state directory for a day.
 
@@ -23,9 +16,10 @@ venv/bin/pip install -e '.[dev]'
 venv/bin/pytest
 ```
 
-To try it against Telegram, put `credentials.json` in `.relaysms/config/` and use the [`relaysms-adapter`](https://github.com/smswithoutborders/RelaySMS-Publisher/tree/main/sdk#try-it) console. It asks for the code Telegram sends, and the two-step password when the account has one.
+To try it against Telegram, use the [`relaysms-adapter`](https://github.com/smswithoutborders/RelaySMS-Publisher/tree/main/sdk#try-it) console. `link` asks for the code Telegram sends, and the two-step password when the account has one.
 
 ```bash
+venv/bin/relaysms-adapter config set api_id=12345 api_hash
 venv/bin/relaysms-adapter link --phone +237600000000
 venv/bin/relaysms-adapter send --to @friend --body hello --attach ./photo.jpg
 venv/bin/relaysms-adapter revoke
