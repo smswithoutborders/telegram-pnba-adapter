@@ -14,13 +14,13 @@ dependencies = [
   "aiohttp==3.14.3",
   "pycryptodome==3.22.0",
   "Telethon==1.37.0",
-  "relaysms-adapter-sdk @ git+https://github.com/smswithoutborders/RelaySMS-Publisher@sdk-v1.0.0#subdirectory=sdk",
+  "relaysms-adapter-sdk @ git+https://github.com/smswithoutborders/RelaySMS-Publisher@sdk-v1.1.0#subdirectory=sdk",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest==9.1.1",
-  "relaysms-adapter-sdk[console] @ git+https://github.com/smswithoutborders/RelaySMS-Publisher@sdk-v1.0.0#subdirectory=sdk",
+  "relaysms-adapter-sdk[console] @ git+https://github.com/smswithoutborders/RelaySMS-Publisher@sdk-v1.1.0#subdirectory=sdk",
 ]
 
 [tool.hatch.metadata]
