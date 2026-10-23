@@ -4,7 +4,7 @@ Lets [RelaySMS Publisher](https://github.com/smswithoutborders/RelaySMS-Publishe
 
 ## Settings
 
-Create an application at [my.telegram.org](https://my.telegram.org/) for its `api_id` and `api_hash`, described in [adapter.toml](adapter.toml). On a Publisher, an administrator sets them with its [settings commands](https://github.com/smswithoutborders/RelaySMS-Publisher/blob/main/docs/platforms.md#settings) or REST API.
+Create an application at [my.telegram.org](https://my.telegram.org/) for its `api_id` and `api_hash`, described in [adapter.toml](adapter.toml). On a Publisher, set them up as its [Telegram guide](https://github.com/smswithoutborders/RelaySMS-Publisher/blob/main/docs/platforms/telegram.md) describes.
 
 Logins waiting for a code or password are kept in `pending_auth.sqlite3` in the adapter's state directory for a day.
 
